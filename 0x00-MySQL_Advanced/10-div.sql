@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS `SafeDiv`;
 
-delimiter |
+DELIMITER |
 
 CREATE FUNCTION SafeDiv(a INT, b INT)
 RETURNS FLOAT
@@ -16,4 +16,4 @@ BEGIN
 END;
 |
 
-delimiter ;
+DELIMITER ;
