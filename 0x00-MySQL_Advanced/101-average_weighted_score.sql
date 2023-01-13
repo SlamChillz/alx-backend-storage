@@ -5,24 +5,24 @@ DROP PROCEDURE IF EXISTS `ComputeAverageWeightedScoreForUsers`;
 DELIMITER |
 CREATE PROCEDURE ComputeAverageWeightedScoreForUsers()
 BEGIN
-	DECLARE i INT;
-	DECLARE n INT;
-	DECLARE d INT;
-	SELECT COUNT(*) FROM users INTO n;
-	SET i = 0;
-	WHILE i < n DO
-		SELECT id INTO d FROM users LIMIT i, 1;
-		UPDATE users SET average_score = (
-			SELECT SUM(x.score * x.weight) / SUM(x.weight)
-			FROM (
-				SELECT c.score, p.weight 
-				FROM corrections c
-				LEFT JOIN projects p ON c.project_id = p.id
-				WHERE c.user_id = d
-			) x
-		) WHERE id = d;
-		SET i = i + 1;
-	END WHILE;
+	DECLARE userid, done INT;
+	DECLARE weighted_average FLOAT;
+	DECLARE cur CURSOR FOR
+		SELECT user_id, SUM(score * weight) / SUM(weight)
+		FROM corrections c
+		LEFT JOIN projects p ON c.project_id = p.id
+		GROUP BY user_id;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+	OPEN cur;
+
+	insert_weighted_average:
+	REPEAT
+		FETCH cur INTO userid, weighted_average;
+		UPDATE users SET average_score = weighted_average WHERE id = userid;
+	UNTIL done = 1
+	END REPEAT;
+
+	CLOSE cur;
 END;
 |
 
