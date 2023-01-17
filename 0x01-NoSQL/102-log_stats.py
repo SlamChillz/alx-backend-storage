@@ -16,7 +16,7 @@ def log_stat() -> None:
     stats += "{} logs\nMethods:\n".format(nginx_collection.count_documents({}))
     for m in method:
         method_count = nginx_collection.count_documents({"method": m})
-        stats += '{}method {}: {}\n'.format(' '*4, m, method_count)
+        stats += '\tmethod {}: {}\n'.format(m, method_count)
     stats += "{} status check".format(
         nginx_collection.count_documents({"path": "/status"}))
     stats += '\nIPs:\n'
@@ -24,7 +24,7 @@ def log_stat() -> None:
         {'$group': {'_id': '$ip', 'count': {'$sum': 1}}},
         {'$sort': {'count': -1}}, {'$limit': 10}])
     for ip in top_ips:
-        stats += '{}{}: {}\n'.format(' '*4, ip.get('_id'), ip.get('count'))
+        stats += '\t{}: {}\n'.format(ip.get('_id'), ip.get('count'))
     print(stats, end='')
 
 

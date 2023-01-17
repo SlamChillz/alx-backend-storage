@@ -5,7 +5,7 @@ A script that provides some stats about Nginx logs stored in MongoDB
 from pymongo import MongoClient
 
 
-def log_stat() -> None:
+def log_stats() -> None:
     """
     Provides some stats about Nginx logs stored in MongoDB
     """
@@ -16,11 +16,11 @@ def log_stat() -> None:
     stats += "{} logs\nMethods:\n".format(nginx_collection.count_documents({}))
     for m in method:
         method_count = nginx_collection.count_documents({"method": m})
-        stats += '{}method {}: {}\n'.format(' '*4, m, method_count)
+        stats += '\tmethod {}: {}\n'.format(m, method_count)
     stats += "{} status check".format(
-        nginx_collection.count_documents({"path": "/status"}))
+            nginx_collection.count_documents({"path": "/status"}))
     print(stats)
 
 
 if __name__ == '__main__':
-    log_stat()
+    log_stats()
