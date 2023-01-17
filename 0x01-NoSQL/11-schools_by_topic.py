@@ -7,7 +7,7 @@ from pymongo import MongoClient
 
 
 def schools_by_topic(mongo_collection: MongoClient,
-                     topic: str) -> List(object):
+                     topic: str) -> List[object]:
     """
     Llist of school having a specific topic
     Args:
