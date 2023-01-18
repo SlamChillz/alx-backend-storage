@@ -10,7 +10,7 @@ def log_stat() -> None:
     Provides some stats about Nginx logs stored in MongoDB
     """
     stats = ""
-    client = MongoClient('mongodb://127.0.01:27017')
+    client = MongoClient('mongodb://127.0.0.1:27017')
     nginx_collection = client.logs.nginx
     method = ["GET", "POST", "PUT", "PATCH", "DELETE"]
     stats += "{} logs\nMethods:\n".format(nginx_collection.count_documents({}))
